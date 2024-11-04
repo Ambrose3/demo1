@@ -1,1 +1,1 @@
-print ("Hello max" )s
+print ("Hello max" )
