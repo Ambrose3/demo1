@@ -1,1 +1,1 @@
-print ("Hello ambrose" )
+print ("Hello fuck" )
