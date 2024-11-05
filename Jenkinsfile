@@ -4,7 +4,7 @@ pipeline {
             label 'dev'
             }
       }
-    striggers {
+    triggers {
         pollSCM '*/5 * * * *'
     }
     stages {
