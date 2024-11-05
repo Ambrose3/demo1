@@ -22,6 +22,7 @@ pipeline {
             steps {
                 echo "Testing.."
                 sh '''
+                cd myapp
                 python3 max.py
                 python3 max.py --name=Max
                 '''
