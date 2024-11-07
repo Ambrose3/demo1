@@ -1,37 +1,24 @@
 pipeline {
-    agent { 
-        node {
-            label 'dev'
-            }
-      }
-      environment {
-        MYSQL_ROOT_LOGIN = credentials('mysql-root-login')
-      }
-    triggers {
-        pollSCM '* * * * *'
+    agent any
+
+    environment {
+        ANSIBLE_PLAYBOOK = 'setup_node_exporter.yml'
+        INVENTORY = 'inventory.ini' // Định nghĩa file inventory Ansible nếu cần
     }
+
     stages {
-        stage('Build with Maven') {
+        stage('Checkout') {
             steps {
-                sh '''
-                mvn --version
-                java -version
-                mvn clean package -Dmaven.test.failure.igore=true
-                '''
+                checkout scm
             }
         }
-        stage('Packaging/Pushing image') {
+        
+        stage('Run Ansible Playbook') {
             steps {
-                withDockerRegistry(credentialsID: 'dockerhub' url: 'https://index.docker.io/v1/',  )
-            
-            }
-        }
-        stage('Deliver') {
-            steps {
-                echo 'Deliver....'
-                sh '''
-                echo "doing delivery stuff.."
-                '''
+                script {
+                    // Run the Ansible playbook
+                    sh "ansible-playbook -i ${INVENTORY} ${ANSIBLE_PLAYBOOK}"
+                }
             }
         }
     }

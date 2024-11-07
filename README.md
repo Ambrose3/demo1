@@ -1,2 +1,2 @@
 # demo1
-triển khaii CI/CD ( jenkins, ansible, git, proxmox,docker) demo
+Triển khai Node exporter lên các VPS/Container
