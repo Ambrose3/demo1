@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        ANSIBLE_PLAYBOOK = 'send_ssh_key.yml'
         ANSIBLE_PLAYBOOK2 = 'setup_node_exporter.yml'
     }
 
