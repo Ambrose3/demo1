@@ -3,6 +3,19 @@
   hosts: all
   become: true
   tasks:
+
+  - name: update (CentOS)
+    tags: always
+    dnf:
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: update (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
     - name: Download Node Exporter
       ansible.builtin.get_url:
         url: "https://github.com/prometheus/node_exporter/releases/download/v1.8.2/node_exporter-1.8.2.linux-amd64.tar.gz"

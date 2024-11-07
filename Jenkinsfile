@@ -12,14 +12,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Send ssh_key') {
-            steps {
-                script {
-                    // Run the Ansible playbook
-                    sh "ansible-playbook ${ANSIBLE_PLAYBOOK}"
-                }
-            }
-        }
         stage('Run setup node exporter') {
             steps {
                 script {
