@@ -1,16 +1,15 @@
----
 - name: Setup Node Exporter
   hosts: all
   become: true
   tasks:
 
-  - name: update (CentOS)
+  - name: Update (CentOS)
     tags: always
     dnf:
       update_cache: yes
     when: ansible_distribution == "CentOS"
 
-  - name: update (Ubuntu)
+  - name: Update (Ubuntu)
     tags: always
     apt:
       update_cache: yes
@@ -29,9 +28,14 @@
       remote_src: yes
 
   - name: Move Node Exporter binary to /usr/local/bin
-    ansible.builtin.copy:
-      src: "/tmp/node_exporter-1.8.2.linux-amd64/node_exporter"
-      dest: "/usr/local/bin/node_exporter"
+    ansible.builtin.command:
+      cmd: "mv /tmp/node_exporter-1.8.2.linux-amd64/node_exporter /usr/local/bin/node_exporter"
+    args:
+      creates: "/usr/local/bin/node_exporter"
+
+  - name: Set permissions on Node Exporter binary
+    ansible.builtin.file:
+      path: "/usr/local/bin/node_exporter"
       mode: '0755'
 
   - name: Create node_exporter user
