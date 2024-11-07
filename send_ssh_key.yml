@@ -1,0 +1,12 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Copy ssh public key to authorized_keys
+    authorized_key:
+      user: root
+      state: present
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCbfdh8z3ZQoW4PluBzDgz8NpXx8Ov7DW6i365Vj9RaIwusj4l6dC4LwKay2QAQeePbMY6lPwVU4sio8WptdJvTnhValZiBaR5OFoCJ0YTemTyQ8rJW+yWuccyWqp4YlI895QAXmSbMXgWCsY4Z2vrXYTqdumHs6dei2RBwOGx+veYKxmau+ohOInSBx7gDNJnbCCDPBwOCQPILWg/XXRTq09aT9Ah8hv3WNpimYMPFqBhePy5/cbPvrWl1EhxEqkc+GJ4y2fDZvJ+Ox0HLDP5es3dZAJnEVOFlJPscYKc/N++GIi1S1YAMXrt7N3edjvnBgdJEHlVANWvArRjwYOLl7ovTSfbfOgUTGzs0uzVbqWKr84OFY1et/e1jjDUazTUSGhLuBgJX6w0Ouze8zwzVFX3qEfTnmZv2LlstHKkF+6NmvV2HxG0YZUQapnurGCqyg1uwU2MgwgVaf0bd8yx/t5bi/967RBTFOtYvsEzkwZFAwTn82ykQp4IHubQk4gs= root@7bdd44e3fc95"
+      path: /root/.ssh/authorized_keys

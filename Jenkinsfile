@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        ANSIBLE_PLAYBOOK = 'setup_node_exporter.yml'
-        INVENTORY = 'inventory.ini' // Định nghĩa file inventory Ansible nếu cần
+        ANSIBLE_PLAYBOOK = 'send_ssh_key.yml'
+        ANSIBLE_PLAYBOOK2 = 'setup_node_exporter.yml'
     }
 
     stages {
@@ -12,12 +12,19 @@ pipeline {
                 checkout scm
             }
         }
-        
-        stage('Run Ansible Playbook') {
+        stage('Send ssh_key') {
             steps {
                 script {
                     // Run the Ansible playbook
-                    sh "ansible-playbook -i ${INVENTORY} ${ANSIBLE_PLAYBOOK}"
+                    sh "ansible-playbook ${ANSIBLE_PLAYBOOK}"
+                }
+            }
+        }
+        stage('Run setup node exporter') {
+            steps {
+                script {
+                    // Run the Ansible playbook
+                    sh "ansible-playbook ${ANSIBLE_PLAYBOOK2}"
                 }
             }
         }
