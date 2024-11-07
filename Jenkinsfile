@@ -4,28 +4,26 @@ pipeline {
             label 'dev'
             }
       }
+      environment {
+        MYSQL_ROOT_LOGIN = credentials('mysql-root-login')
+      }
     triggers {
         pollSCM '* * * * *'
     }
     stages {
-        stage('Build') {
+        stage('Build with Maven') {
             steps {
-                echo "Building.."
                 sh '''
-                cd myapp
-                apt install -y python3-pip
-                pip install -r requirement.txt
+                mvn --version
+                java -version
+                mvn clean package -Dmaven.test.failure.igore=true
                 '''
             }
         }
-        stage('Test') {
+        stage('Packaging/Pushing image') {
             steps {
-                echo "Testing.."
-                sh '''
-                cd myapp
-                python3 max.py
-                python3 max.py --name=Max
-                '''
+                withDockerRegistry(credentialsID: 'dockerhub' url: 'https://index.docker.io/v1/',  )
+            
             }
         }
         stage('Deliver') {
