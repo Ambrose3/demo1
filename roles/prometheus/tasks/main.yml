@@ -1,0 +1,88 @@
+    # Step 1: Cài đặt các gói cần thiết
+    - name: Install dependencies
+      apt:
+        name: 
+          - adduser
+          - libfontconfig1
+          - musl
+        state: present
+        update_cache: yes
+
+    # Step 2: Tải Prometheus
+    - name: Download Prometheus
+      ansible.builtin.get_url:
+        url: "https://github.com/prometheus/prometheus/releases/download/v2.55.0/prometheus-2.55.0.linux-amd64.tar.gz"
+        dest: "/tmp/prometheus-2.55.0.linux-amd64.tar.gz"
+        mode: '0644'
+
+    # Step 3: Giải nén Prometheus
+    - name: Extract Prometheus
+      ansible.builtin.unarchive:
+        src: "/tmp/prometheus-2.55.0.linux-amd64.tar.gz"
+        dest: "/tmp"
+        remote_src: yes
+
+    # Step 4: Di chuyển các file nhị phân Prometheus
+    - name: Move Prometheus binaries
+      ansible.builtin.copy:
+        src: "/tmp/prometheus-2.55.0.linux-amd64/{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
+        mode: '0755'
+      loop:
+        - prometheus
+        - promtool
+
+    # Step 5: Tạo thư mục cấu hình và di chuyển file cấu hình
+    - name: Create Prometheus configuration directory
+      ansible.builtin.file:
+        path: "/etc/prometheus"
+        state: directory
+
+    - name: Move Prometheus configuration file
+      ansible.builtin.copy:
+        src: "/tmp/prometheus-2.55.0.linux-amd64/prometheus.yml"
+        dest: "/etc/prometheus/prometheus.yml"
+        mode: '0644'
+
+    # Step 6: Tạo thư mục dữ liệu cho Prometheus
+    - name: Create Prometheus data directory
+      ansible.builtin.file:
+        path: "/var/lib/prometheus/data"
+        state: directory
+        owner: root
+        group: root
+
+    # Step 7: Tạo file service cho Prometheus
+    - name: Create Prometheus systemd service file
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/prometheus.service
+        content: |
+          [Unit]
+          Description=Prometheus
+          Wants=network-online.target
+          After=network-online.target
+
+          [Service]
+          User=root
+          ExecStart=/usr/local/bin/prometheus \
+            --config.file /etc/prometheus/prometheus.yml \
+            --storage.tsdb.path /var/lib/prometheus/data \
+            --web.listen-address ":9090" \
+            --web.enable-lifecycle
+
+          [Install]
+          WantedBy=default.target
+        mode: '0644'
+
+    # Step 8: Reload và khởi động dịch vụ Prometheus
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Start and enable Prometheus service
+      ansible.builtin.systemd:
+        name: prometheus
+        state: started
+        enabled: true
+
+

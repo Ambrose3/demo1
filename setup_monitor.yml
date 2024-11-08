@@ -18,4 +18,10 @@
   become: true
   roles: 
   - node_exporter
+
+- hosts: CT01 
+  become: true
+  roles: 
+  - prometheus
+  - grafana
  
