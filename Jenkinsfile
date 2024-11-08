@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ANSIBLE_PLAYBOOK2 = 'setup_node_exporter.yml'
+        ANSIBLE_PLAYBOOK2 = 'setup_monitor.yml'
     }
 
     stages {
