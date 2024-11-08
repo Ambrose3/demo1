@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ANSIBLE_PLAYBOOK2 = 'setup_monitor.yml'
+        ANSIBLE_PLAYBOOK = 'setup_monitor.yml'
     }
 
     stages {
@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Run the Ansible playbook
-                    sh "ansible-playbook ${ANSIBLE_PLAYBOOK2}"
+                    sh "ansible-playbook ${ANSIBLE_PLAYBOOK}"
                 }
             }
         }
