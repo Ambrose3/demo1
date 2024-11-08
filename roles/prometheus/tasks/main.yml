@@ -39,6 +39,12 @@
     - name: Move Prometheus configuration file
       ansible.builtin.command:
         cmd: "mv /tmp/prometheus-2.55.0.linux-amd64/prometheus.yml /etc/prometheus/"
+      
+    - name: Generate Prometheus configuration file with IP targets
+      ansible.builtin.template:
+        src: prometheus.yml.j2
+        dest: /etc/prometheus/prometheus.yml
+        mode: '0644'
 
     # Step 6: Tạo thư mục dữ liệu cho Prometheus
     - name: Create Prometheus data directory
