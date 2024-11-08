@@ -11,7 +11,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Run setup node exporter') {
+        stage('Run setup node_exporter, prometheus and grafana') {
             steps {
                 script {
                     // Run the Ansible playbook

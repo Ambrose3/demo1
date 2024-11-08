@@ -1,0 +1,48 @@
+- name: install httpd package (CentOS)
+  dnf:
+    name:
+      - "{{ apache-package_name }}"
+      - "{{ php_package_name }}"
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: start and enable httpd (CentOS)
+  service:
+    name: httpd
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: install apache2 package (Ubuntu)
+  apt:
+    name:
+      - apache2
+      - php
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: start apache (ubuntu)
+  service:
+     name: apache2
+     state: started
+     enabled: yes
+
+- name: change mail
+  lineinfile:
+      path: /etc/apache2/apache2.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+  register: apache2
+
+- name: restart apache2
+  service:
+     name: apache2
+     state: restarted
+  when: apache2.changed
+
+- name: copy max.html file for website
+  copy:
+    src: max.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
