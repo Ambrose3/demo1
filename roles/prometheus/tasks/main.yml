@@ -1,3 +1,8 @@
+- name: Install Prometheus and Grafana
+  hosts: all
+  become: true
+  tasks:
+    
     # Step 1: Cài đặt các gói cần thiết
     - name: Install dependencies
       apt:
@@ -24,10 +29,8 @@
 
     # Step 4: Di chuyển các file nhị phân Prometheus
     - name: Move Prometheus binaries
-      ansible.builtin.copy:
-        src: "/tmp/prometheus-2.55.0.linux-amd64/{{ item }}"
-        dest: "/usr/local/bin/{{ item }}"
-        mode: '0755'
+      ansible.builtin.command:
+        cmd: "mv /tmp/prometheus-2.55.0.linux-amd64/{{ item }} /usr/local/bin/"
       loop:
         - prometheus
         - promtool
@@ -39,10 +42,8 @@
         state: directory
 
     - name: Move Prometheus configuration file
-      ansible.builtin.copy:
-        src: "/tmp/prometheus-2.55.0.linux-amd64/prometheus.yml"
-        dest: "/etc/prometheus/prometheus.yml"
-        mode: '0644'
+      ansible.builtin.command:
+        cmd: "mv /tmp/prometheus-2.55.0.linux-amd64/prometheus.yml /etc/prometheus/"
 
     # Step 6: Tạo thư mục dữ liệu cho Prometheus
     - name: Create Prometheus data directory
@@ -84,5 +85,3 @@
         name: prometheus
         state: started
         enabled: true
-
-
