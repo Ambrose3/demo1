@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+  
+   - name: Update (CentOS)
+    tags: always
+    dnf:
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: Update (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - hosts: all 
+    become: true
+    roles: 
+    - node_exporter
+ 
