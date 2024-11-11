@@ -21,11 +21,15 @@
       path: "/usr/local/bin/node_exporter"
       mode: '0755'
 
-  - name: Create node_exporter user
+  - name: Ensure node_exporter user exists
     ansible.builtin.user:
       name: "node_exporter"
       shell: "/bin/false"
       system: yes
+      state: present
+      create_home: no  # Không tạo thư mục home cho người dùng system
+    become: true       # Chạy lệnh với quyền root (nếu cần thiết)
+
 
   - name: Create systemd service file for Node Exporter
     ansible.builtin.template:
