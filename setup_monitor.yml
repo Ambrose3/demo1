@@ -19,7 +19,7 @@
   roles: 
   - node_exporter
 
-- hosts: CT02
+- hosts: VPS01
   become: true
   vars: 
     target_ips:
